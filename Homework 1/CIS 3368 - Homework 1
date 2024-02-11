@@ -71,3 +71,15 @@ if user_response == "a":
 
 #  hear drink details option (list drink details based on drink number)
 elif user_response == "b":
+    user_response3 = input("\nPlease select a drink number for details: ")
+    while user_response3 != "quit":
+        try:
+            print(storage_details[user_response3])
+            user_response3 = input("Please select a drink number (enter quit to exit): ").lower()
+        except KeyError:
+            command_line()
+            print("Enter corresponding drink number for details (ex. 1 = lemonade)")
+            user_response3 = input("Please select a drink number (enter quit to exit): ").lower()
+
+else:
+    print("Unknown command")

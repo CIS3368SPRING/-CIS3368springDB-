@@ -54,3 +54,20 @@ for user in rows:
 #  provides user with 2 options (order drinks or hear drink details)
 print(f"\na = start order \nb = drink info")
 user_response = input(f"Enter a command: ")
+
+#  order drinks option (records user input and generates a receipt when finished)
+if user_response == "a":
+    user_response2 = input("\nPlease select a drink number: ")
+    while user_response2 != "total":
+        if user_response2 not in storage_price.keys():
+            command_line()
+            print("Enter corresponding drink number for details (ex. 1 = lemonade)")
+            user_response2 = input("Please select a drink number: ")
+        else:
+            user_drinks.append(user_response2)
+            user_response2 = input("Please select another drink number (enter total when finished): ")
+
+    total_price(user_drinks)
+
+#  hear drink details option (list drink details based on drink number)
+elif user_response == "b":

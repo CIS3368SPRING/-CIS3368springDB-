@@ -1,0 +1,56 @@
+import mysql.connector
+from mysql.connector import Error
+
+
+def create_con(hostname, username, userpw, dbname):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=hostname,
+            user=username,
+            password=userpw,
+            database=dbname
+        )
+        print("CONN SUCCESSFUL")
+    except Error as e:
+        print(f'The error {e} occured')
+    return connection
+
+
+conn = create_con('cis3368spring.ctsc6kk4oete.us-east-1.rds.amazonaws.com', 'admin', 'Krazyred1', 'CIS3368springDB')
+cursor = conn.cursor(dictionary=True)
+sql = 'SELECT * FROM drinks'
+cursor.execute(sql)
+rows = cursor.fetchall()
+
+#  2 dictionaries to store callable prices and details. 1 list to record user drink requests.
+storage_price = {}
+storage_details = {}
+user_drinks = []
+
+
+# generates a command line for drinks
+def command_line():
+    for line in rows:
+        print(line["id"], "-", line["drinkname"], ": $", line["price"])
+
+
+#  generates the final receipt
+def total_price(listed):
+    print("\nList of ordered drinks and prices:")
+    total = 0
+    for product in listed:
+        print(f"Drink Num:{product} Price:{storage_price[product]}")
+        total += storage_price[product]
+    print(f"Total: ${total}")
+
+
+#  records information from table and places prices and descriptions into dictionaries
+for user in rows:
+    print(user["id"], "-", user["drinkname"], ": $", user["price"])
+    storage_price[str(user["id"])] = user["price"]
+    storage_details[str(user["id"])] = user["color"], user["description"]
+
+#  provides user with 2 options (order drinks or hear drink details)
+print(f"\na = start order \nb = drink info")
+user_response = input(f"Enter a command: ")
